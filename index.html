@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Edukate - Online Education Website Template</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Free HTML Templates" name="keywords">
+    <meta content="Free HTML Templates" name="description">
+
+   <!-- map -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <style>
+        #map {
+            height: 500px;
+            width: 100%;
+        }
+    </style>
+
+    <!-- Favicon -->
+    <link href="img/favicon.ico" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet"> 
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/style.css" rel="stylesheet">
+</head>
+
+<body>
+    
+    <!-- Navbar Start -->
+     <div class="container-fluid p-0">
+        <nav class="navbar bg-white navbar-light">
+            <a href="about.html">
+                <h1 class="m-3"><img src="img/kota-ambon.png" alt="kotaambon" height="60"><img src="img/kominfo1.png" alt="kominfo" height="55"></h1>
+            </a>
+            <a href="https://commandcenter.ambon.go.id" class="btn btn-primary py-2 px-4 d-none d-lg-block">Home</a>
+        </nav>
+    </div>
+    <!-- Navbar End -->
+
+
+    <!-- Header Start -->
+    <div class="jumbotron jumbotron-fluid page-header position-relative overlay-bottom" style="margin-bottom: 90px;">
+        <div class="container text-center py-5">
+            <div class="container-fluid px-0">
+                <div class="row justify-content-center bg-image mx-0 mb-2" >
+                    <div class="col-lg-15 py-2" id="map" >
+                        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+                        <script>
+                            // koordinat (contoh: Indonesia)
+                            var map = L.map('map').setView([-3.690387, 128.186579], 13);
+
+                            // tile map
+                            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                attribution: '&copy; OpenStreetMap'
+                            }).addTo(map);
+                                
+                            //icon
+                                const cctvIcon = L.icon({
+                                    iconUrl: 'img/cctv.png',
+                                    iconSize: [40, 40],      // ukuran ikon
+                                    iconAnchor: [20, 40],    // titik yang menempel ke koordinat
+                                    popupAnchor: [0, -40]    // posisi popup
+                                });
+
+                                // marker
+                                const lokasi = [
+                                {
+                                    nama: "CCTV Balai Kota",
+                                    lat: -3.69421,
+                                    lng: 128.18149,
+                                    stream: "https://zshops-filtering-blogging-pump.trycloudflare.com/balaikota/index.m3u8?cookieCheck=1"
+                                },
+                                {
+                                    nama: "CCTV DPRD Kota Ambon",
+                                    lat: -3.69586,
+                                    lng: 128.190000,
+                                    stream: "https://zshops-filtering-blogging-pump.trycloudflare.com/dprdkota/index.m3u8?cookieCheck=1"
+                                },
+                                {
+                                    nama: "CCTV Sungai Batu Merah",
+                                    lat: -3.68687,
+                                    lng: 128.18766,
+                                    stream: "https://zshops-filtering-blogging-pump.trycloudflare.com/sungaibatumerah/index.m3u8?cookieCheck=1"
+                                },
+                                {
+                                    nama: "CCTV Bak Sampah Tulukabessy",
+                                    lat: -3.68986,
+                                    lng: 128.18619,
+                                    stream: "https://zshops-filtering-blogging-pump.trycloudflare.com/sampahtulukabessy/index.m3u8?cookieCheck=1"
+                                },
+                                {
+                                    nama: "CCTV Taman Bawah JMP",
+                                    lat: -3.66719,
+                                    lng: 128.19782,
+                                    stream: "https://zshops-filtering-blogging-pump.trycloudflare.com/tamanjmp/index.m3u8?cookieCheck=1"
+                                }
+                                // {
+                                //     nama: "CCTV Pasar Mardika",
+                                //     lat: -3.68708,
+                                //     lng: 128.18405,
+                                //     stream: "https://arrivals-minutes-communication-provinces.trycloudflare.com/pasar/index.m3u8?cookieCheck=1"
+                                // }
+
+                            ];
+
+                            lokasi.forEach(function(item, index) {
+                                L.marker([item.lat, item.lng], {
+                                    icon: cctvIcon
+                                })
+                                .addTo(map)
+                                .bindPopup(`
+                                    <h5>${item.nama}</h5>
+                                    <video id="video${index}" width="300" controls autoplay muted></video>
+                                `)
+                                .on('popupopen', function () {
+
+                                const video = document.getElementById(`video${index}`);
+
+                                if (Hls.isSupported()) {
+                                    const hls = new Hls();
+                                    hls.loadSource(item.stream);
+                                    hls.attachMedia(video);
+                                } else {
+                                    video.src = item.stream;
+                                }
+                                });
+                            });
+                            // jika mau pop up langsung kebuka aktifkan yang dibawa
+                            // .openPopup();
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Header End -->
+   
+    <!-- Feature Start -->
+    <div class="container-fluid py-5">
+        <div class="container py-5">
+            <div class="row">
+                <div class="col-lg-7 mb-5 mb-lg-0">
+                    <div class="section-title position-relative mb-4">
+                        <h6 class="d-inline-block position-relative text-secondary text-uppercase pb-2">Kenapa harus ada cctv?</h6>
+                        <h1 class="display-4">Apa Manfaat CCTV untuk Masyarakat?</h1>
+                    </div>
+                    <p class="mb-4 pb-2">CCTV Live Streaming pada website Command Center memberikan akses 
+                        informasi visual secara langsung kepada masyarakat. Fitur ini mendukung transparansi 
+                        informasi, meningkatkan pemantauan kondisi wilayah, serta membantu masyarakat memperoleh 
+                        informasi situasi terkini secara cepat dan mudah.</p>
+                    <div class="d-flex mb-3">
+                        <div class="btn-icon bg-primary mr-4">
+                            <i class="fa fa-2x fa-book-reader text-white"></i>
+                        </div>
+                        <div class="mt-n1">
+                            <h4>Informasi Real-Time</h4>
+                            <p>Masyarakat dapat melihat kondisi dan situasi di lokasi yang terpantau CCTV secara langsung melalui website Command Center.</p>
+                        </div>
+                    </div>
+                    <div class="d-flex mb-3">
+                        <div class="btn-icon bg-secondary mr-4">
+                            <i class="fa fa-2x fa-certificate text-white"></i>
+                        </div>
+                        <div class="mt-n1">
+                            <h4>Meningkatkan Transparansi</h4>
+                            <p>Penyediaan akses CCTV secara publik mendukung keterbukaan informasi dan meningkatkan transparansi pemerintah kepada masyarakat.</p>
+                        </div>
+                    </div>
+                    <div class="d-flex">
+                        <div class="btn-icon bg-warning mr-4">
+                            <i class="fa fa-2x fa-book-reader text-white"></i>
+                        </div>
+                        <div class="mt-n1">
+                            <h4>Mendukung Keamanan</h4>
+                            <p class="m-0">Informasi visual secara real-time dapat membantu masyarakat mengetahui kondisi lingkungan dan mendukung kewaspadaan terhadap situasi yang terjadi.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5" style="min-height: 500px;">
+                    <div class="position-relative h-100">
+                        <img class="position-absolute w-100 h-100" src="img/gedung.png" style="object-fit: cover;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Feature Start -->
+
+
+    
+
+    <!-- Footer Start -->
+   
+    <div class="container-fluid bg-dark">
+        <div class="row py-2 px-lg-5">
+            <div class="col-lg-6 text-center text-lg-left mb-2 mb-lg-0">
+                <div class="col-md-15 text-center text-md-left mb-3 mb-md-0">
+                    <p class="m-0">Copyright &copy; <a class="text-white" href="#">DISKOMINFO KOTA AMBON</a>. All Rights Reserved.
+                    </p>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center text-lg-right">
+                <div class="d-inline-flex align-items-center">
+                    <a class="text-white px-2" href="">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a class="text-white px-2" href="">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a class="text-white px-2" href="">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
+                    <a class="text-white px-2" href="">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a class="text-white pl-2" href="">
+                        <i class="fab fa-youtube"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
+
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary rounded-0 btn-lg-square back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="lib/counterup/counterup.min.js"></script>
+    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+</body>
+
+</html>
